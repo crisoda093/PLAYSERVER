@@ -1,70 +1,46 @@
 #!/bin/bash
 
-# Instalación sin llave para Ubuntu 24.04
-# Repositorio: https://github.com/crisoda093/PLAYSERVER/blob/main/Install-Sin-Key.sh
+# ┌────────────────────────────────────────────┐
+# │  Script de instalación SIN KEY             │
+# │  Compatible con Ubuntu 18.04 / 20.04 / 24.04│
+# │  Actualizado por crisoda093                │
+# └────────────────────────────────────────────┘
 
-echo "Iniciando instalación... por favor espera."
+set -e
 
-# Actualizamos el sistema
-echo "Actualizando el sistema..."
-sudo apt update && sudo apt upgrade -y
+# Detectar versión de Ubuntu
+ubuntu_version=$(lsb_release -rs)
+echo "→ Detectando versión de Ubuntu: $ubuntu_version"
 
-# Instalación de dependencias necesarias
-echo "Instalando dependencias..."
-sudo apt install -y \
-  curl \
-  wget \
-  git \
-  build-essential \
-  python3 \
-  python3-pip \
-  python3-dev \
-  libssl-dev \
-  libffi-dev \
-  libxml2-dev \
-  libxslt1-dev \
-  zlib1g-dev \
-  liblzma-dev \
-  g++ \
-  make \
-  unzip \
-  sudo \
-  vim \
-  nano
-
-# Instalamos herramientas útiles
-echo "Instalando herramientas adicionales..."
-sudo apt install -y net-tools nmap htop
-
-# Instalamos Docker (si es necesario)
-echo "Instalando Docker..."
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-# Instalamos Docker Compose (si es necesario)
-echo "Instalando Docker Compose..."
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-
-# Configuración para el uso de Docker sin sudo
-echo "Configurando Docker para el usuario sin sudo..."
-sudo usermod -aG docker $USER
-
-# Instalamos el repositorio desde GitHub
-echo "Clonando el repositorio de GitHub..."
-git clone https://github.com/crisoda093/PLAYSERVER/blob/main/Install-Sin-Key.sh
-
-# Cambio al directorio del repositorio
-cd PLAYSERVER
-
-# Si hay un script de instalación dentro del repositorio, lo ejecutamos
-if [ -f "Install-Sin-Key.sh" ]; then
-  echo "Ejecutando script Install-Sin-Key.sh del repositorio..."
-  chmod +x Install-Sin-Key.sh
-  ./Install-Sin-Key.sh
-else
-  echo "No se encontró el script Install-Sin-Key.sh en el repositorio."
+# Validar versión
+if [[ "$ubuntu_version" != "18.04" && "$ubuntu_version" != "20.04" && "$ubuntu_version" != "24.04" ]]; then
+  echo "✖ Este script solo funciona con Ubuntu 18.04, 20.04 y 24.04."
+  exit 1
 fi
 
-# Finalizamos
-echo "¡Instalación completada exitosamente! Por favor reinicia el sistema para que todos los cambios surtan efecto."
+# Actualizar sistema
+echo "→ Actualizando el sistema..."
+sudo apt update && sudo apt upgrade -y
+
+# Instalar dependencias comunes
+echo "→ Instalando paquetes necesarios..."
+sudo apt install -y apache2 php php-cli curl wget unzip git lsb-release software-properties-common
+
+# Crear carpetas del proyecto
+echo "→ Creando estructura de carpetas..."
+mkdir -p ~/sin-key/{web,bin,logs}
+chmod -R 755 ~/sin-key
+chown -R $USER:$USER ~/sin-key
+
+# Habilitar módulos de Apache
+echo "→ Configurando Apache..."
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+
+# Comprobar estado del servicio Apache
+echo "→ Estado de Apache:"
+systemctl is-active apache2 && echo "✔ Apache está activo" || echo "✖ Apache NO está corriendo"
+
+# Final
+echo "✔ Instalación completa para Ubuntu $ubuntu_version"
+echo "→ Carpeta de trabajo: ~/sin-key"
