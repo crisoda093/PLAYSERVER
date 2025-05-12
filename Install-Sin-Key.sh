@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Instalación sin llave para Ubuntu 24.04
-# Repositorio: https://github.com/crisoda093/Crisvps
+# Repositorio: https://github.com/crisoda093/PLAYSERVER
 
 echo "Iniciando instalación... por favor espera."
 
@@ -52,10 +52,10 @@ sudo usermod -aG docker $USER
 
 # Instalamos el repositorio desde GitHub
 echo "Clonando el repositorio de GitHub..."
-git clone https://github.com/crisoda093/Crisvps.git
+git clone https://github.com/crisoda093/PLAYSERVER.git
 
 # Cambio al directorio del repositorio
-cd Crisvps
+cd PLAYSERVER
 
 # Si hay un script de instalación dentro del repositorio, lo ejecutamos
 if [ -f "Install-Sin-Key.sh" ]; then
