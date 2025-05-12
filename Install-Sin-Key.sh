@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Instalación sin llave para Ubuntu 24.04
-# Repositorio: https://github.com/crisoda093/PLAYSERVER
+# Repositorio: https://github.com/crisoda093/PLAYSERVER/blob/main/Install-Sin-Key.sh
 
 echo "Iniciando instalación... por favor espera."
 
@@ -52,7 +52,7 @@ sudo usermod -aG docker $USER
 
 # Instalamos el repositorio desde GitHub
 echo "Clonando el repositorio de GitHub..."
-git clone https://github.com/crisoda093/PLAYSERVER.git
+git clone https://github.com/crisoda093/PLAYSERVER/blob/main/Install-Sin-Key.sh
 
 # Cambio al directorio del repositorio
 cd PLAYSERVER
